@@ -38,6 +38,11 @@ MonoBehaviour:
   - DestroyRpc
   - NetworkDestroy
   - NetworkDamage
+  - SetEnemyPlayerName
+  - SetEnemyPlayerRace
+  - SetAnimationBool
+  - SetAnimationRunningBool
+  - SetPlayerIndex
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

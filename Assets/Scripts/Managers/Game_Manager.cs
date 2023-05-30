@@ -3,22 +3,42 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class Game_Manager : MonoBehaviour
+[System.Serializable]
+public struct HealthModel
 {
-    [SerializeField]
-    private GameObject spawnPlyer1;
-    [SerializeField]
-    private GameObject spawnPlyer2;
+    [SerializeField] GameObject[] m_healthGOArray;
 
-    private void Awake()
+    public void SetHealth(int p_value)
     {
+        for(int i = 0; i < m_healthGOArray.Length; i++)
+        {
+            m_healthGOArray[i].SetActive(i < p_value);
+        }
+    }
+
+}
+
+public class Game_Manager : Singleton<Game_Manager>
+{
+    [SerializeField] Transform[] m_spawnTrArray;
+    [SerializeField] HealthModel[] m_healthModelArray;
+
+    protected override void Awake()
+    {
+        base.Awake();
         if (PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.Instantiate("Player", spawnPlyer1.transform.position, Quaternion.identity);
+            Character character = PhotonNetwork.Instantiate("Player_1", m_spawnTrArray[0].position, Quaternion.identity).GetComponent<Character>();
+            character.PlayerIndex = 0;
         }
         else 
         {
-            PhotonNetwork.Instantiate("Player", spawnPlyer2.transform.position, Quaternion.identity);
+            Character character = PhotonNetwork.Instantiate("Player_2", m_spawnTrArray[1].position, Quaternion.identity).GetComponent<Character>();
+            character.PlayerIndex = 1;
         }
     }
+
+    public Transform GetSpawnTr(int p_index) { return m_spawnTrArray[p_index]; }
+    public HealthModel GetHealthModel(int p_index) { return m_healthModelArray[p_index]; }
+
 }
